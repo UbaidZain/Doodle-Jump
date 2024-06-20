@@ -1,0 +1,47 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  display: flex;
+  /* justify-content: center; */
+  flex-wrap: wrap;
+}
+.game-container {
+  width: 500px;
+  height: 630px;
+  margin: 0 auto;
+  background-color: rgb(151, 241, 253);
+  position: relative;
+  top: 0;
+}
+
+.platform {
+  height: 15px;
+  width: 90px;
+  background-color: green;
+  position: absolute;
+}
+.doodler {
+  width: 80px;
+  height: 80px;
+  background-color: rgb(244, 255, 93);
+  /* bottom: 50%; */
+  position: absolute;
+}
+
+.score-container {
+  width: 100px;
+  position: absolute;
+  left: 10%;
+  font-size: 2rem;
+}
+
+.start-message {
+  text-align: center;
+  font-size: 2rem;
+  position: absolute;
+  left: 0;
+  top: 70%;
+}
