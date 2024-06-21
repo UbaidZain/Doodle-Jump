@@ -29,6 +29,7 @@ body {
   background-color: rgb(244, 255, 93);
   /* bottom: 50%; */
   position: absolute;
+  z-index: 99;
 }
 
 .score-container {
