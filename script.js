@@ -22,7 +22,7 @@ let isFalling = true;
 let isMovingLeft = false;
 let leftTime;
 let rightTime;
-
+let platformTime;
 // Selectors }
 
 // {Event handlers
@@ -34,18 +34,39 @@ document.addEventListener("keydown", startGame);
 // {Functions
 function startGame(e) {
   currentlyPlaying = true;
-  if (e.key === "Enter" && currentlyPlaying === true && !isGameOver) {
+  isGameOver = false;
+  if (e.key === "Enter" && currentlyPlaying === true) {
+    console.log("Game started");
+    if (platforms.length > 0) {
+      platforms.forEach((obj) => {
+        obj.platform.remove();
+      });
+      platforms = [];
+    }
+    startingPoint = 65;
+    score = 0;
+    platformBottom;
+    platformLeft;
+    doodlerBottom;
+    doodlerLeft;
+    scoreBoard.innerHTML = "-";
+    clearInterval(leftTime);
+    clearInterval(rightTime);
+    clearInterval(upTime);
+    clearInterval(downTime);
+    clearInterval(platformTime);
+
     message.innerHTML = "";
     createPlatforms();
     createDoodler();
-    currentlyPlaying = true;
-    setInterval(movePlatforms, 30);
+    movePlatforms();
     setInterval(addDeletePlatform, 30);
     jump();
     document.addEventListener("keydown", moveDoodler);
     document.addEventListener("keyup", stopDoodler);
   }
 }
+
 function createDoodler() {
   doodler.classList.add("doodler");
   doodlerLeft = platforms[0].left;
@@ -77,12 +98,14 @@ function createPlatforms() {
 }
 
 function movePlatforms() {
-  if (currentlyPlaying && doodlerBottom > 200) {
-    platforms.forEach((obj) => {
-      obj.bottom -= 8;
-      obj.platform.style.bottom = obj.bottom + "px";
-    });
-  }
+  platformTime = setInterval(() => {
+    if (currentlyPlaying && doodlerBottom > 200) {
+      platforms.forEach((obj) => {
+        obj.bottom -= 12;
+        obj.platform.style.bottom = obj.bottom + "px";
+      });
+    }
+  }, 30);
 }
 function incrementScore(obj) {
   score += obj.point;
@@ -150,16 +173,27 @@ function fall() {
   }, 30);
 }
 function moveLeft() {
-  isMovingLeft = true;
+  // if (!isMovingLeft) {
+  //   clearInterval(rightTime);
+  //   isMovingLeft = true;
+  // }
   leftTime = setInterval(() => {
+    // if (doodlerLeft >= 0) {
     doodlerLeft -= 10;
     doodler.style.left = doodlerLeft + "px";
+    // }
   }, 30);
 }
 function moveRight() {
+  // if (isMovingLeft) {
+  //   clearInterval(leftTime);
+  //   isMovingLeft = false;
+  // }
   rightTime = setInterval(() => {
+    // if (doodlerLeft <= 420) {
     doodlerLeft += 10;
     doodler.style.left = doodlerLeft + "px";
+    // }
   }, 30);
 }
 function gameOver() {
@@ -169,9 +203,11 @@ function gameOver() {
   clearInterval(upTime);
   clearInterval(leftTime);
   clearInterval(rightTime);
+  clearInterval(platformTime);
+  message.innerHTML = "Press 'Enter' to continue";
 }
 function moveDoodler(e) {
-  if (currentlyPlaying && !isGameOver) {
+  if (currentlyPlaying && !isGameOver && doodlerLeft < 500 && doodlerLeft > 0) {
     if (e.key === "ArrowRight") {
       moveRight();
     } else if (e.key === "ArrowLeft") {
